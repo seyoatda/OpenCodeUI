@@ -1,4 +1,3 @@
-import { cleanTrellisTitle } from '../../../utils/trellisUtils'
 import { useCallback, useMemo, useState, useEffect, useRef, useSyncExternalStore, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SessionList } from '../../sessions'
