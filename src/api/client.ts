@@ -46,6 +46,19 @@ export async function getActiveModels(directory?: string): Promise<ModelInfo[]> 
       if (model.status === 'active') {
         const variants = model.variants ? Object.keys(model.variants) : []
 
+        // Fallback for missing image capabilities in known multimodal model families
+        const modelIdLower = model.id.toLowerCase()
+        const isKnownVisionModel =
+          modelIdLower.includes('gemini') ||
+          modelIdLower.includes('claude-3') ||
+          modelIdLower.includes('gpt-4o') ||
+          modelIdLower.includes('gpt-4-vision') ||
+          modelIdLower.includes('gpt-4-turbo') ||
+          modelIdLower.includes('llava') ||
+          modelIdLower.includes('qwen-vl') ||
+          modelIdLower.includes('pixtral') ||
+          modelIdLower.includes('vision')
+
         models.push({
           id: model.id,
           name: model.name || model.id,
@@ -55,7 +68,7 @@ export async function getActiveModels(directory?: string): Promise<ModelInfo[]> 
           contextLimit: model.limit.context,
           outputLimit: model.limit.output,
           supportsReasoning: model.capabilities.reasoning,
-          supportsImages: model.capabilities.input.image,
+          supportsImages: model.capabilities.input.image || isKnownVisionModel,
           supportsPdf: model.capabilities.input.pdf,
           supportsAudio: model.capabilities.input.audio,
           supportsVideo: model.capabilities.input.video,

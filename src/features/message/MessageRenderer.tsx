@@ -23,6 +23,7 @@ import {
   RetryPartView,
   CompactionPartView,
   MessageErrorView,
+  WorkflowStatePartView,
 } from './parts'
 import { extractToolData } from './tools'
 import type {
@@ -114,6 +115,38 @@ function useEntryGrowAnimation(created: number) {
 
 /** 默认预览 8 行 */
 const COLLAPSE_PREVIEW_LINES = 8
+
+/** Known XML tags injected by Trellis. Only extract these to avoid matching user's own XML. */
+const TRELLIS_TAGS = [
+  'trellis-context',
+  'first-reply-notice',
+  'current-state',
+  'workflow',
+  'guidelines',
+  'task-status',
+  'ready',
+  'workflow-state',
+]
+const TRELLIS_TAG_RE = new RegExp(
+  `<(${TRELLIS_TAGS.join('|')})>([\\s\\S]*?)</\\1>`,
+  'gi',
+)
+
+function extractTrellisContext(text: string): {
+  cleanText: string
+  trellisTags: string[]
+} {
+  const trellisTags: string[] = []
+  const cleanText = text
+    .replace(TRELLIS_TAG_RE, (_, _tagName, content) => {
+      trellisTags.push(content.trim())
+      return ''
+    })
+    .replace(/^\n+/, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+  return { cleanText, trellisTags }
+}
 
 // 折叠状态缓存：消息是否溢出、用户是否手动展开过
 const overflowStateCache = new Map<string, boolean>()
@@ -273,7 +306,11 @@ const UserMessageView = memo(function UserMessageView({
   const compactionParts = parts.filter((p): p is CompactionPart => p.type === 'compaction')
 
   const hasSystemContext = syntheticParts.length > 0
-  const messageText = textParts.map(p => p.text).join('')
+  const rawMessageText = textParts.map(p => p.text).join('')
+  const { cleanText: messageText, trellisTags } = useMemo(
+    () => extractTrellisContext(rawMessageText),
+    [rawMessageText],
+  )
 
   return (
     <div ref={wrapperRef} className="flex flex-col items-end group">
@@ -281,6 +318,13 @@ const UserMessageView = memo(function UserMessageView({
         {/* 消息文本 */}
         {messageText && (
           <CollapsibleUserText text={messageText} collapseEnabled={collapseUserMessages} messageId={info.id} />
+        )}
+
+        {/* Trellis Context */}
+        {trellisTags.length > 0 && (
+          <div className="flex flex-col gap-1 items-end w-full mt-1">
+            <WorkflowStatePartView content={trellisTags.join('\n\n')} tagCount={trellisTags.length} />
+          </div>
         )}
 
         {/* 用户附件 */}

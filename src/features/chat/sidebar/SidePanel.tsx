@@ -340,6 +340,7 @@ export function SidePanel({
       if (s?.parentID) return s.parentID
       return childSessionStore.getSessionInfo(id)?.parentID
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [sessionLookup, childSessionVersion],
   )
 
