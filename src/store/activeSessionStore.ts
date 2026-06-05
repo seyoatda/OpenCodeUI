@@ -13,6 +13,7 @@
 
 import { useCallback, useSyncExternalStore } from 'react'
 import type { SessionStatus, SessionStatusMap } from '../types/api/session'
+import { cleanTrellisTitle } from '../utils/trellisUtils'
 
 // ============================================
 // Types
@@ -298,7 +299,7 @@ class ActiveSessionStore {
 
   setSessionMeta(sessionId: string, title?: string, directory?: string) {
     const existing = this.sessionMeta.get(sessionId)
-    const newTitle = title ?? existing?.title
+    const newTitle = title !== undefined ? cleanTrellisTitle(title) : existing?.title
     const newDir = directory ?? existing?.directory
     if (newTitle !== existing?.title || newDir !== existing?.directory) {
       this.sessionMeta.set(sessionId, { title: newTitle, directory: newDir })
@@ -311,7 +312,7 @@ class ActiveSessionStore {
 
     for (const entry of entries) {
       const existing = this.sessionMeta.get(entry.sessionId)
-      const newTitle = entry.title ?? existing?.title
+      const newTitle = entry.title !== undefined ? cleanTrellisTitle(entry.title) : existing?.title
       const newDir = entry.directory ?? existing?.directory
 
       if (newTitle !== existing?.title || newDir !== existing?.directory) {

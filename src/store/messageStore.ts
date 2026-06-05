@@ -12,6 +12,7 @@ import type { Message, Part, FilePart, AgentPart } from '../types/message'
 import type { ApiMessageWithParts, ApiMessage, ApiPart, ApiSession, Attachment } from '../api/types'
 import { logger } from '../utils/logger'
 import { isUserUIMessage, toUIMessage, toUIMessageInfo, toUIPart } from '../utils/messageConversion'
+import { cleanTrellisTitle } from '../utils/trellisUtils'
 import type { RevertState, RevertHistoryItem, SessionState, SendRollbackSnapshot } from './messageStoreTypes'
 
 // Re-export types for consumers
@@ -235,7 +236,7 @@ class MessageStore {
 
     if (options.hasMoreHistory !== undefined) state.hasMoreHistory = options.hasMoreHistory
     if (options.directory !== undefined) state.directory = options.directory
-    if (options.title !== undefined) state.title = options.title
+    if (options.title !== undefined) state.title = cleanTrellisTitle(options.title)
     if (options.loadState !== undefined) state.loadState = options.loadState
     if (options.shareUrl !== undefined) state.shareUrl = options.shareUrl
 
@@ -305,7 +306,7 @@ class MessageStore {
     state.loadState = 'loaded'
     state.hasMoreHistory = options?.hasMoreHistory ?? false
     state.directory = options?.directory ?? ''
-    if (options?.title !== undefined) state.title = options.title
+    if (options?.title !== undefined) state.title = cleanTrellisTitle(options.title)
     state.shareUrl = options?.shareUrl
     state.isStale = false
 
