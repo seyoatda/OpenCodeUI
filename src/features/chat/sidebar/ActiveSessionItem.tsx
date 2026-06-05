@@ -1,3 +1,4 @@
+import { cleanTrellisTitle } from '../../../utils/trellisUtils'
 import { useTranslation } from 'react-i18next'
 import type { ActiveSessionEntry } from '../../../store/activeSessionStore'
 import type { ApiSession } from '../../../api'
@@ -15,7 +16,7 @@ export function ActiveSessionItem({ entry, resolvedSession, isSelected, onSelect
   const isRetry = entry.status.type === 'retry'
   const pending = entry.pendingAction
   // 标题优先从 resolvedSession 取，然后 fallback 到 entry.title（sessionMeta），最后截取 ID
-  const displayTitle = resolvedSession?.title || entry.title || entry.sessionId.slice(0, 12) + '...'
+  const displayTitle = cleanTrellisTitle(resolvedSession?.title || entry.title || entry.sessionId.slice(0, 12) + '...')
   // 目录优先从 resolvedSession 取
   const directory = resolvedSession?.directory || entry.directory
 

@@ -1,3 +1,4 @@
+import { cleanTrellisTitle } from '../../utils/trellisUtils'
 import { useRef, useEffect, useCallback, useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SearchIcon, PencilIcon, TrashIcon, ComposeIcon, CheckIcon } from '../../components/Icons'
@@ -584,9 +585,9 @@ export function SessionListItem({
             {/* 标题 */}
             <span
               className="min-w-0 flex-1 truncate text-[length:var(--fs-sm)]"
-              title={session.title || t('sessions.untitledChat')}
+              title={cleanTrellisTitle(session.title || t('sessions.untitledChat'))}
             >
-              {session.title || t('sessions.untitledChat')}
+              {cleanTrellisTitle(session.title || t('sessions.untitledChat'))}
             </span>
 
             {((hasSummaryStats && session.summary) || session.time?.updated) && (
@@ -624,9 +625,9 @@ export function SessionListItem({
               {/* 标题 */}
               <span
                 className="min-w-0 flex-1 truncate text-[length:var(--fs-sm)]"
-                title={session.title || t('sessions.untitledChat')}
+                title={cleanTrellisTitle(session.title || t('sessions.untitledChat'))}
               >
-                {session.title || t('sessions.untitledChat')}
+                {cleanTrellisTitle(session.title || t('sessions.untitledChat'))}
               </span>
 
               {((hasSummaryStats && session.summary) || session.time?.updated) && (
@@ -725,9 +726,9 @@ export function SessionListItem({
         <div className="flex-1 min-w-0 pr-1">
           <p
             className={`${isCompact ? 'text-[length:var(--fs-md)]' : 'text-[length:var(--fs-base)]'} truncate font-medium text-text-200`}
-            title={session.title || t('sessions.untitledChat')}
+            title={cleanTrellisTitle(session.title || t('sessions.untitledChat'))}
           >
-            {session.title || t('sessions.untitledChat')}
+            {cleanTrellisTitle(session.title || t('sessions.untitledChat'))}
           </p>
 
           <div
@@ -789,9 +790,9 @@ export function SessionListItem({
             {/* Row 1: Title */}
             <p
               className={`${isCompact ? 'text-[length:var(--fs-md)]' : 'text-[length:var(--fs-base)]'} truncate font-medium ${isSelected ? 'text-text-100' : 'text-text-200 group-hover:text-text-100'}`}
-              title={session.title || t('sessions.untitledChat')}
+              title={cleanTrellisTitle(session.title || t('sessions.untitledChat'))}
             >
-              {session.title || t('sessions.untitledChat')}
+              {cleanTrellisTitle(session.title || t('sessions.untitledChat'))}
             </p>
 
             {/* Row 2: Meta line — 始终存在，保持高度一致 */}

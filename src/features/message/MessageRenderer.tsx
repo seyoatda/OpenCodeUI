@@ -109,44 +109,14 @@ function useEntryGrowAnimation(created: number) {
   return ref
 }
 
+import { extractTrellisContext } from '../../utils/trellisUtils'
+
 // ============================================
 // Collapsible User Text
 // ============================================
 
 /** 默认预览 8 行 */
 const COLLAPSE_PREVIEW_LINES = 8
-
-/** Known XML tags injected by Trellis. Only extract these to avoid matching user's own XML. */
-const TRELLIS_TAGS = [
-  'trellis-context',
-  'first-reply-notice',
-  'current-state',
-  'workflow',
-  'guidelines',
-  'task-status',
-  'ready',
-  'workflow-state',
-]
-const TRELLIS_TAG_RE = new RegExp(
-  `<(${TRELLIS_TAGS.join('|')})>([\\s\\S]*?)</\\1>`,
-  'gi',
-)
-
-function extractTrellisContext(text: string): {
-  cleanText: string
-  trellisTags: string[]
-} {
-  const trellisTags: string[] = []
-  const cleanText = text
-    .replace(TRELLIS_TAG_RE, (_, _tagName, content) => {
-      trellisTags.push(content.trim())
-      return ''
-    })
-    .replace(/^\n+/, '')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim()
-  return { cleanText, trellisTags }
-}
 
 // 折叠状态缓存：消息是否溢出、用户是否手动展开过
 const overflowStateCache = new Map<string, boolean>()

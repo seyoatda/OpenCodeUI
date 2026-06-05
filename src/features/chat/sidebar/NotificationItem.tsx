@@ -1,3 +1,4 @@
+import { cleanTrellisTitle } from '../../../utils/trellisUtils'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CheckIcon, AlertCircleIcon, CloseIcon, HandIcon, QuestionIcon } from '../../../components/Icons'
@@ -31,7 +32,7 @@ interface NotificationItemProps {
 export function NotificationItem({ entry, resolvedSession, onSelect }: NotificationItemProps) {
   const { t } = useTranslation(['chat', 'common'])
   const { preferTouchUi } = useInputCapabilities()
-  const displayTitle = resolvedSession?.title || entry.title || entry.sessionId.slice(0, 12) + '...'
+  const displayTitle = cleanTrellisTitle(resolvedSession?.title || entry.title || entry.sessionId.slice(0, 12) + '...')
   const directory = resolvedSession?.directory || entry.directory
   const [showActions, setShowActions] = useState(false)
   const [hasFocusWithin, setHasFocusWithin] = useState(false)

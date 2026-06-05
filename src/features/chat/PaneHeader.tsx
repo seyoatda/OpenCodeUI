@@ -1,3 +1,4 @@
+import { cleanTrellisTitle } from '../../utils/trellisUtils'
 /**
  * PaneHeader — Compact header bar for each split pane.
  *
@@ -64,7 +65,7 @@ export function PaneHeader({
   // Drag state for swap
   const [isDragOver, setIsDragOver] = useState(false)
 
-  const title = sessionState?.title || t('header.newChat')
+  const title = cleanTrellisTitle(sessionState?.title || t('header.newChat'))
   const splitEnabled = canSplitPane ?? canUseSplitPane(viewport)
 
   // Reset editing when session changes
